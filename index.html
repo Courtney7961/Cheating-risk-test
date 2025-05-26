@@ -1,197 +1,68 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>The Cheating Detection Test</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cheating Detection Quiz</title>
   <style>
-    * {margin: 0; padding: 0; box-sizing: border-box;}
-    body {
-      font-family: 'Arial', sans-serif;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      min-height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      padding: 20px;
-    }
-    .quiz-container {
-      background: white;
-      border-radius: 20px;
-      box-shadow: 0 20px 40px rgba(0,0,0,0.1);
-      max-width: 600px;
-      width: 100%;
-      overflow: hidden;
-    }
-    .quiz-header { background: linear-gradient(135deg, #ff6b6b, #ee5a24); color: white; padding: 30px; text-align: center; }
-    .question-container, .results-container { padding: 40px; }
-    .question { display: none; }
-    .question.active { display: block; }
-    .answer-option {
-      background: #f8f9fa;
-      border: 2px solid #e9ecef;
-      border-radius: 12px;
-      padding: 18px;
-      margin-bottom: 15px;
-      cursor: pointer;
-    }
-    .answer-option.selected {
-      background: linear-gradient(135deg, #ff6b6b, #ee5a24);
-      color: white;
-      border-color: #ee5a24;
-    }
-    .navigation {
-      padding: 20px 40px;
-      display: flex;
-      justify-content: space-between;
-      background: #f8f9fa;
-    }
-    .btn {
-      padding: 12px 24px;
-      border: none;
-      border-radius: 8px;
-      font-size: 16px;
-      cursor: pointer;
-      font-weight: bold;
-    }
-    .btn-primary {
-      background: linear-gradient(135deg, #ff6b6b, #ee5a24);
-      color: white;
-    }
-    .btn-secondary { background: #6c757d; color: white; }
-    .results-container { display: none; text-align: center; }
-    .results-container.active { display: block; }
-    .risk-level { font-size: 48px; margin-bottom: 20px; }
-    .risk-high { color: #dc3545; }
-    .risk-medium { color: #ffc107; }
-    .risk-low { color: #28a745; }
-    .email-capture iframe { width: 100%; height: 600px; border: none; margin-top: 30px; }
-    .disclaimer { font-size: 12px; color: #6c757d; margin-top: 20px; }
+    body { font-family: Arial, sans-serif; margin: 0; padding: 0; background-color: #f5f5f5; }
+    .container { max-width: 600px; margin: 40px auto; background: #fff; padding: 20px; border-radius: 8px; }
+    h1 { text-align: center; color: #d62828; }
+    .question { margin: 20px 0; }
+    .answer-option { display: block; margin: 10px 0; padding: 10px; background: #eee; border-radius: 5px; cursor: pointer; }
+    .answer-option:hover { background: #ddd; }
+    #riskTitle { font-size: 24px; text-align: center; color: #000; margin-top: 30px; }
   </style>
 </head>
 <body>
-  <div class="quiz-container">
-    <div class="quiz-header">
-      <h1>🚨 The Cheating Detection Test</h1>
-      <p>New study reveals the ONE thing cheaters always do first</p>
-    </div>
-
-    <div class="question-container" id="questionContainer">
-      <!-- 10 questions from original quiz -->
-      <div class="question active" data-question="0"><h3>How confident are you that your partner would NEVER cheat on you?</h3><div class="answer-option" data-value="4">100% certain</div><div class="answer-option" data-value="3">Pretty confident</div><div class="answer-option" data-value="2">Some doubts</div><div class="answer-option" data-value="1">Not sure anymore</div></div>
-      <div class="question" data-question="1"><h3>How often does your partner hide their phone screen?</h3><div class="answer-option" data-value="1">Never</div><div class="answer-option" data-value="2">Rarely</div><div class="answer-option" data-value="3">Sometimes</div><div class="answer-option" data-value="4">Often</div></div>
-      <div class="question" data-question="2"><h3>Has your partner suddenly become more image-conscious?</h3><div class="answer-option" data-value="1">No change</div><div class="answer-option" data-value="2">Minor change</div><div class="answer-option" data-value="3">Random or sudden</div><div class="answer-option" data-value="4">Major & out of character</div></div>
-      <div class="question" data-question="3"><h3>Do they mention someone new a lot?</h3><div class="answer-option" data-value="1">Rarely mention others</div><div class="answer-option" data-value="2">Normal mentions</div><div class="answer-option" data-value="3">One person comes up often</div><div class="answer-option" data-value="4">Someone mentioned constantly then stopped</div></div>
-      <div class="question" data-question="4"><h3>Are they suddenly less available or "working late"?</h3><div class="answer-option" data-value="1">No change</div><div class="answer-option" data-value="2">Occasional</div><div class="answer-option" data-value="3">Frequent vague excuses</div><div class="answer-option" data-value="4">Regular pattern</div></div>
-      <div class="question" data-question="5"><h3>How do they react if you ask to use their phone?</h3><div class="answer-option" data-value="1">Totally fine</div><div class="answer-option" data-value="2">Slight hesitation</div><div class="answer-option" data-value="3">Uncomfortable</div><div class="answer-option" data-value="4">Defensive/refuses</div></div>
-      <div class="question" data-question="6"><h3>How often do YOU think about someone else romantically?</h3><div class="answer-option" data-value="1">Never</div><div class="answer-option" data-value="2">Rarely</div><div class="answer-option" data-value="3">Sometimes</div><div class="answer-option" data-value="4">Often</div></div>
-      <div class="question" data-question="7"><h3>Have you had a deep convo with someone outside your relationship?</h3><div class="answer-option" data-value="1">No</div><div class="answer-option" data-value="2">Maybe once</div><div class="answer-option" data-value="3">Yes, a close friend</div><div class="answer-option" data-value="4">Yes, it felt intimate</div></div>
-      <div class="question" data-question="8"><h3>If someone flirted with you, would you tell your partner?</h3><div class="answer-option" data-value="1">Always</div><div class="answer-option" data-value="2">Probably</div><div class="answer-option" data-value="3">Maybe not</div><div class="answer-option" data-value="4">Definitely not</div></div>
-      <div class="question" data-question="9"><h3>Do you feel like your partner is hiding something?</h3><div class="answer-option" data-value="1">No</div><div class="answer-option" data-value="2">Maybe minor stuff</div><div class="answer-option" data-value="3">Something's off</div><div class="answer-option" data-value="4">Yes</div></div>
-    </div>
-
-    <div class="results-container" id="resultsContainer">
-      <div class="risk-level" id="riskIcon">🚨</div>
-      <h2 id="riskTitle">Your Risk Level: HIGH</h2>
-      <p id="riskDescription">Based on your answers, there are several red flags.</p>
-
-      <div class="email-capture">
-        <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSf18alL6idY63jqx1aiZfczaS5mStdc-utOaHBtvOd9-ASp2g/viewform?embedded=true" width="100%" height="600"></iframe>
+  <div class="container">
+    <h1>Cheating Detection Quiz</h1>
+    <div id="quiz">
+      <div class="question" data-question="0">
+        <p>How confident are you that your partner would NEVER cheat on you?</p>
+        <div class="answer-option" data-value="1">100% certain</div>
+        <div class="answer-option" data-value="2">Pretty confident</div>
+        <div class="answer-option" data-value="3">Some doubts</div>
+        <div class="answer-option" data-value="4">Not sure anymore</div>
       </div>
-
-      <div class="disclaimer">Your email will only be used for raffle entry and research updates. Privacy respected.</div>
     </div>
+    <div id="riskTitle"></div>
 
-    <div class="navigation">
-      <button class="btn btn-secondary" id="prevBtn" onclick="previousQuestion()">Previous</button>
-      <button class="btn btn-primary" id="nextBtn" onclick="nextQuestion()">Next</button>
+    <hr>
+    <h3 style="text-align:center;">Want Full Results + Enter the Raffle?</h3>
+    <div style="text-align:center; margin-top: 10px;">
+      <a href="https://docs.google.com/forms/d/e/1FAIpQLSf18alL6idY63jqx1aiZfczaS5mStdc-utOaHBtvOd9-ASp2g/viewform?usp=header" target="_blank">
+        <button style="padding: 12px 24px; font-size: 16px; background-color: #d62828; color: white; border: none; border-radius: 5px; cursor: pointer;">
+          Claim My Entry
+        </button>
+      </a>
     </div>
   </div>
 
   <script>
-    let currentQuestion = 0;
-    let answers = [];
-    const totalQuestions = 10;
+    const questionEl = document.querySelector('.question');
+    const options = questionEl.querySelectorAll('.answer-option');
+    const riskTitle = document.getElementById('riskTitle');
 
-    function updateButtons() {
-      document.getElementById('prevBtn').style.display = currentQuestion === 0 ? 'none' : 'block';
-      document.getElementById('nextBtn').textContent = currentQuestion === totalQuestions - 1 ? 'Get Results' : 'Next';
-      document.getElementById('nextBtn').disabled = !answers[currentQuestion];
-    }
-
-    function showQuestion(n) {
-      const questions = document.querySelectorAll('.question');
-      questions.forEach(q => q.classList.remove('active'));
-      questions[n].classList.add('active');
-      updateButtons();
-    }
-
-    function nextQuestion() {
-      if (currentQuestion < totalQuestions - 1) {
-        currentQuestion++;
-        showQuestion(currentQuestion);
-      } else {
-        showResults();
-      }
-    }
-
-    function previousQuestion() {
-      if (currentQuestion > 0) {
-        currentQuestion--;
-        showQuestion(currentQuestion);
-      }
-    }
-
-    function showResults() {
-      document.getElementById('questionContainer').style.display = 'none';
-      document.querySelector('.navigation').style.display = 'none';
-      document.getElementById('resultsContainer').classList.add('active');
-
-      const partnerRiskScore = answers[0] + answers[1] + answers[2] + answers[3] + answers[4] + answers[5];
-      const personalRiskScore = answers[6] + answers[7] + answers[8];
-      const gutFeelingScore = answers[9];
-      const totalScore = partnerRiskScore + personalRiskScore + gutFeelingScore;
-
-      let riskLevel = 'low', icon = '✅', title = 'Your Risk Level: LOW', desc = 'You seem secure, but stay alert.';
-      if (totalScore >= 30) {
-        riskLevel = 'high'; icon = '🚨'; title = 'Your Risk Level: HIGH'; desc = 'Multiple red flags. Stay cautious.';
-      } else if (totalScore >= 20) {
-        riskLevel = 'medium'; icon = '⚠️'; title = 'Your Risk Level: MODERATE'; desc = 'Some signs to keep an eye on.';
-      }
-
-      document.getElementById('riskIcon').textContent = icon;
-      document.getElementById('riskTitle').textContent = title;
-      document.getElementById('riskDescription').textContent = desc;
-      document.getElementById('riskIcon').className = 'risk-level risk-' + riskLevel;
-    }
-
-    document.addEventListener('click', function(e) {
-      if (e.target.classList.contains('answer-option')) {
-        const question = e.target.closest('.question');
-        const questionNum = parseInt(question.dataset.question);
-        const value = parseInt(e.target.dataset.value);
-
-        question.querySelectorAll('.answer-option').forEach(opt => opt.classList.remove('selected'));
-        e.target.classList.add('selected');
-        answers[questionNum] = value;
-        updateButtons();
-        setTimeout(() => { if (currentQuestion === questionNum) nextQuestion(); }, 800);
-      }
+    options.forEach(option => {
+      option.addEventListener('click', () => {
+        options.forEach(opt => opt.classList.remove('selected'));
+        option.classList.add('selected');
+        const value = parseInt(option.dataset.value);
+        showRiskLevel(value);
+      });
     });
 
-    showQuestion(0);         <hr>
-<hr>
-<h3 style="text-align:center;">Want Full Results + Enter the Raffle?</h3>
-<div style="text-align:center; margin-top: 10px;">
-<a href="https://docs.google.com/forms/d/e/YOUR_REAL_LINK/viewform?usp=sf_link" target="_blank">
-<button style="padding: 12px 24px; font-size: 16px; background-color: #d62828; color: white; border: none; border-radius: 5px; cursor: pointer;">
-Claim My Entry
-</button>
-</a>
-</div>
+    function showRiskLevel(value) {
+      let result = "";
+      if (value === 1) result = "LOW: You’re likely safe, but stay aware.";
+      else if (value === 2) result = "MODERATE: Trust is good, but pay attention.";
+      else if (value === 3) result = "ELEVATED: Some signs may point to danger.";
+      else if (value === 4) result = "HIGH: Multiple red flags. Stay cautious.";
 
-</body>
-</html>
+      riskTitle.textContent = `Your Risk Level: ${result}`;
+    }
   </script>
 </body>
 </html>
